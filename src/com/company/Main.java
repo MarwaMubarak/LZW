@@ -25,6 +25,7 @@ public class Main {
         {
             dic.put((char)i+"",i);
         }
+        System.out.println("Enter Text to Compression: ");
         Scanner input = new Scanner(System.in);
         String str=input.next();
         Vector<Integer>Compression=new Vector<>();
@@ -152,5 +153,6 @@ public class Main {
  139
  138
 
+ ABAABABBAABAABAAAABABBBBBBBB
 
  **/
