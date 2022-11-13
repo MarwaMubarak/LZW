@@ -123,22 +123,22 @@ public class Main {
 }
 
 /**
- * 14
- * <p>
- * 65
- * 66
- * 65
- * 128
- * 128
- * 129
- * 131
- * 134
- * 130
- * 129
- * 66
- * 138
- * 139
- * 138
- * <p>
- * ABAABABBAABAABAAAABABBBBBBBB
+  14
+
+  65
+  66
+  65
+  128
+  128
+  129
+  131
+  134
+  130
+  129
+  66
+  138
+  139
+  138
+
+  ABAABABBAABAABAAAABABBBBBBBB
  **/
