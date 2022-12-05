@@ -1,9 +1,14 @@
 package com.company;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     //to calculate number of bits
@@ -20,16 +25,24 @@ public class Main {
 
     static void Compression() {
         HashMap<String, Integer> dic = new HashMap<String, Integer>();
+        // build the dictionary
         for (int i = 0; i < 128; i++) {
             dic.put((char) i + "", i);
         }
-        System.out.println("Enter Text to Compression: ");
-        Scanner input = new Scanner(System.in);
+//        System.out.println("Enter Text to Compression: ");
+        Scanner input =null;
+        try {
+            input = new Scanner(new FileInputStream("input.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         String str = input.next();
         Vector<Integer> Compression = new Vector<>();
+
         String curr = "";
         int cnt = 128;
         int mx = 0;
+
         for (int i = 0; i < str.length(); i++) {
             curr += str.charAt(i);
             if (!dic.containsKey(curr)) {
@@ -46,22 +59,35 @@ public class Main {
             mx = Math.max(mx, dic.get(curr));
 
         }
+        try {
+            PrintWriter printWriter = new PrintWriter("output.txt");
+
+
         for (int i = 0; i < Compression.size(); i++) {
-            System.out.println("<" + Compression.get(i) + "> ");
+            printWriter.println("<" + Compression.get(i) + "> ");
         }
-        System.out.println();
+//        System.out.println();
         int after = NumOfBits(mx) * Compression.size();
         int before = str.length() * 8;
-        System.out.println("THe Size Before Compression = " + before + " Bits");
-        System.out.println("THe Size After Compression = " + after + " Bits");
+            printWriter.println("THe Size Before Compression = " + before + " Bits");
+            printWriter.println("THe Size After Compression = " + after + " Bits");
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     static void Decompression() {
-        Scanner input = new Scanner(System.in);
+        Scanner input = null;
+        try {
+            input = new Scanner(new FileInputStream("input.txt") );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         ArrayList<Integer> tags = new ArrayList<Integer>();
-        System.out.println("Enter Tags Size:");
+        //System.out.println("Enter Tags Size:");
         int tagsSize = input.nextInt();
-        System.out.println("Enter " + tagsSize + " Tags:");
+        //System.out.println("Enter " + tagsSize + " Tags:");
         for (int i = 0; i < tagsSize; i++) {
             int x = input.nextInt();
             tags.add(x);
@@ -84,40 +110,95 @@ public class Main {
             prev = dic.get(tags.get(i));
 
         }
-        System.out.println("The Decompression Text: " + decompressionTxt);
+        try {
+            PrintWriter printWriter =new PrintWriter("output.txt");
+            printWriter.println("The Decompression Text: " + decompressionTxt);
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("----------------------------");
-        System.out.println("--- Welcome To LZW App ---");
-        System.out.println("----------------------------");
-        while (true) {
-            System.out.println("Choose Number From Our List To Start: ");
-            System.out.println("-------------------------------------");
-            System.out.println("1- Compression");
-            System.out.println("2- Decompression");
-            System.out.println("3- Exit");
-            System.out.println("-------------------------------------");
-            System.out.print(">> ");
-            int choice = input.nextInt();
-            System.out.println("-------------------------------------");
+        JFrame frame_ = new JFrame("LZW App");
+        JLabel label_1, label_2;
+        label_1 = new JLabel("Enter Input File Name");
+        label_1.setBounds(50, 20, 300, 25);
+        final JTextField input1 = new JTextField();
+        input1.setBounds(190, 25, 150, 25);
 
-            if (choice == 1) {
+        label_2 = new JLabel("Enter Output File Name");
+        label_2.setBounds(50, 70, 300, 25);
+        final JTextField input2 = new JTextField();
+        input2.setBounds(190, 70, 150, 25);
+
+        JButton button1 = new JButton("Compression");
+        button1.setBounds(350, 150, 150, 30);
+        JButton button2 = new JButton("Decompression");
+        button2.setBounds(150, 150, 150, 30);
+
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
                 Compression();
-                System.out.println("-------------------------------------");
-            } else if (choice == 2) {
-                Decompression();
-                System.out.println("-------------------------------------");
-            } else if (choice == 3) {
-                System.out.println("Exit..");
-                System.out.println("-------------------------------------");
-                break;
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
+
             }
-        }
+        });
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Decompression();
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
+
+
+            }
+        });
+        frame_.add(label_1);
+        frame_.add(label_2);
+        frame_.add(button1);
+        frame_.add(button2);
+        frame_.add(input1);
+        frame_.add(input2);
+        frame_.setSize(600, 250);
+        frame_.setLayout(null);
+        frame_.setVisible(true);
+
+//        Scanner input = new Scanner(System.in);
+//        System.out.println("----------------------------");
+//        System.out.println("--- Welcome To LZW App ---");
+//        System.out.println("----------------------------");
+//            System.out.println("Choose Number From Our List To Start: ");
+//            System.out.println("-------------------------------------");
+//            System.out.println("1- Compression");
+//            System.out.println("2- Decompression");
+//            System.out.println("-------------------------------------");
+//            System.out.print(">> ");
+//            int choice = input.nextInt();
+//            System.out.println("-------------------------------------");
+//
+//            if (choice == 1) {
+//                Compression();
+//                System.out.println("-------------------------------------");
+//            } else if (choice == 2) {
+//                Decompression();
+//                System.out.println("-------------------------------------");
+//            }
+
 
     }
 }
